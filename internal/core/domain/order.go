@@ -8,14 +8,21 @@ type Order struct {
 	OrderStatus OrderStatus
 }
 
-func GetTotal() {
-	// ayuda a calcular el total de la orden
+func (o *Order) IsEmpty() bool {
+	return true
 }
 
-func AddItem() {
-	// ayuda a añadir una item a la orden
+func (o *Order) ItemCount() int {
+	// TODO: necesita devolver el total de los items que tiene una orden
+	return 1
 }
 
-func ChangeItem() {
-	// ayuda a cambiar items de la orden
+func (o *Order) HasStatus(status OrderStatus) bool {
+	// TODO: verifica el estado de la ordern
+	return false
+}
+
+func (o *Order) CalculateSubtotal() int {
+	// TODO: Calcual el subtotal de la orden
+	return 1
 }
