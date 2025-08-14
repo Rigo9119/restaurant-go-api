@@ -1,10 +1,10 @@
 package domain
 
-const ZERO_TOTAL = 0
+const zeroTotal = 0
 
 type Order struct {
 	ID          string
-	CustomerID  string
+	UserID      string
 	OrderItems  []MenuItem
 	OrderTotal  int
 	OrderStatus OrderStatus
@@ -23,7 +23,7 @@ func (o *Order) HasStatus(status OrderStatus) bool {
 }
 
 func (o *Order) CalculateSubtotal() int {
-	total := ZERO_TOTAL
+	total := zeroTotal
 	orderItems := o.OrderItems
 
 	for _, orderItem := range orderItems {

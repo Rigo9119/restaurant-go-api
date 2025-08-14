@@ -20,8 +20,8 @@ type MenuRepository interface {
 	FindByCategory(category string) ([]domain.MenuItem, error) // Metodo especifico al menu
 }
 
-type CustomerRepository interface {
-	Repository[domain.Customer]
+type UserRepository interface {
+	Repository[domain.User]
 }
 
 type OrderRepository interface {

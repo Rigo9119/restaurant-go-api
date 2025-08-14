@@ -1,5 +1,13 @@
 package domain
 
+type Role string
+
+const (
+	UserAdmin    Role = "admin"
+	UserCustomer Role = "customer"
+	UserManager  Role = "manager"
+)
+
 type Size string
 
 const (
@@ -20,27 +28,27 @@ type BunType string
 
 const (
 	BunSesame  BunType = "sesame"
-	BunBrioche BunType = "brioce"
+	BunBrioche BunType = "brioche"
 	BunPotato  BunType = "potato"
 	BunPretzel BunType = "pretzel"
 )
 
-type DrinkTemperatue string
+type DrinkTemperature string
 
 const (
-	Hot  DrinkTemperatue = "hot"
-	Cold DrinkTemperatue = "cold"
-	Room DrinkTemperatue = "room"
+	Hot  DrinkTemperature = "hot"
+	Cold DrinkTemperature = "cold"
+	Room DrinkTemperature = "room"
 )
 
 type Sauces string
 
 const (
-	Ketchup   Sauces = "ketchup"
-	Mustard   Sauces = "mustard"
-	Mayonaise Sauces = "mayonaise"
-	Especial  Sauces = "Espcial"
-	BBQ       Sauces = "bbq"
+	Ketchup    Sauces = "ketchup"
+	Mustard    Sauces = "mustard"
+	Mayonnaise Sauces = "mayonnaise"
+	Especial   Sauces = "Especial"
+	BBQ        Sauces = "bbq"
 )
 
 type AddOns string
@@ -50,8 +58,8 @@ const (
 	Cheese    AddOns = "cheese"
 	Onion     AddOns = "onion"
 	Tomato    AddOns = "tomato"
-	Letttuce  AddOns = "lettuce"
-	Pickles   AddOns = "Pickles"
+	Lettuce   AddOns = "lettuce"
+	Pickles   AddOns = "pickles"
 	Peppers   AddOns = "peppers"
 	Jalapenos AddOns = "jalapenos"
 )

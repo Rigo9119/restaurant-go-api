@@ -2,9 +2,8 @@ package core
 
 import (
 	"errors"
-	"fmt"
 	"restaurant-go-api/internal/core/domain"
-	"time"
+	"restaurant-go-api/internal/shared/utils"
 )
 
 // logica de negocio
@@ -22,38 +21,38 @@ type OrderService interface {
 }
 
 type orderService struct {
-	orderRepo    OrderRepository
-	customerRepo CustomerRepository
-	menuRepo     MenuRepository
+	orderRepo OrderRepository
+	userRepo  UserRepository
+	menuRepo  MenuRepository
 }
 
 // Constructor para una nueva orden
 func NewOrderService(
 	orderRepo OrderRepository,
-	customerRepo CustomerRepository,
+	userRepo UserRepository,
 	menuRepo MenuRepository,
 ) OrderService {
 	return &orderService{
-		orderRepo:    orderRepo,
-		customerRepo: customerRepo,
-		menuRepo:     menuRepo,
+		orderRepo: orderRepo,
+		userRepo:  userRepo,
+		menuRepo:  menuRepo,
 	}
 }
 
-func (s *orderService) CreateCustomerOrder(customerID string) (*domain.Order, error) {
-	// 1. Valida que tengamos un usuario
-	customer, err := s.customerRepo.FindByID(customerID)
+func (s *orderService) CreateCustomerOrder(userID string) (*domain.Order, error) {
+	// 1. Valida que tengamos un usuariok
+	user, err := s.userRepo.FindByID(userID)
 	if err != nil {
 		return nil, err
 	}
-	if customer == nil {
-		return nil, errors.New("customer not found")
+	if user == nil {
+		return nil, errors.New("user not found")
 	}
 
 	// 2. Crea una nueva orden
 	order := &domain.Order{
-		ID:          generateOrderID(),
-		CustomerID:  customerID,
+		ID:          utils.GenerateRandomID("order"),
+		UserID:      userID,
 		OrderItems:  []domain.MenuItem{},
 		OrderTotal:  0,
 		OrderStatus: domain.Ordered,
@@ -99,7 +98,4 @@ func (s *orderService) ProcessPayment(orderID string, paymentMethod string) erro
 	return errors.New("not implemented yet")
 }
 
-// Helper function to generate unique IDs
-func generateOrderID() string {
-	return fmt.Sprintf("order_%d", time.Now().UnixNano())
-}
+// ID generation is now handled by utils.GenerateRandomID()

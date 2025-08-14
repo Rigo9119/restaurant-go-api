@@ -26,7 +26,7 @@ type Side struct {
 type Drink struct {
 	MenuItem
 	Size         Size
-	Temperature  DrinkTemperatue
+	Temperature  DrinkTemperature
 	IsCarbonated bool
 	HasIce       bool
 }
@@ -67,7 +67,7 @@ func (b *Burguer) CalculateBurguerPrice() int {
 		switch sauce {
 		case Ketchup, Mustard:
 			totalPrice += 0 // Free basic sauces
-		case Mayonaise, BBQ:
+		case Mayonnaise, BBQ:
 			totalPrice += 1 // Premium sauces
 		case Especial:
 			totalPrice += 2 // Specialty sauce
@@ -78,7 +78,7 @@ func (b *Burguer) CalculateBurguerPrice() int {
 
 	for _, addon := range b.AddOns {
 		switch addon {
-		case Letttuce, Tomato, Pickles, Onion:
+		case Lettuce, Tomato, Pickles, Onion:
 			totalPrice += 0 // Free vegetables
 		case Cheese:
 			totalPrice += 2
@@ -95,8 +95,6 @@ func (b *Burguer) CalculateBurguerPrice() int {
 }
 
 func (b *Burguer) MakeVegetarian() bool {
-	// esta funcion tiene que cambiar el PattyType
-	// de la hamburguesa a veggie
 	if b.PattyType != PattyVeggie {
 		return false
 	}
