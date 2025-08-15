@@ -32,6 +32,7 @@ type Drink struct {
 }
 
 type Menu struct {
+	ID        string
 	MenuItems []MenuItem
 	Sides     []Side
 	Drink     Drink
