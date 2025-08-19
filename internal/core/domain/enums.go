@@ -73,6 +73,7 @@ type OrderStatus string
 const (
 	Ready     OrderStatus = "ready"
 	Preparing OrderStatus = "preparing"
-	Canceled  OrderStatus = "canceled"
+	Cancelled OrderStatus = "cancelled"
 	Ordered   OrderStatus = "ordered"
+	Delivered OrderStatus = "delivered"
 )

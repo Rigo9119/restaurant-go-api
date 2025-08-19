@@ -1,3 +1,4 @@
+// Package services -> connectan la app con los adapters
 package services
 
 import (
@@ -27,7 +28,7 @@ type orderService struct {
 	menuRepo  core.MenuRepository
 }
 
-// Constructor para una nueva orden
+// NewOrderService -> Constructor para una nueva orden
 func NewOrderService(
 	orderRepo core.OrderRepository,
 	userRepo core.UserRepository,
@@ -70,6 +71,18 @@ func (s *orderService) CreateCustomerOrder(userID string) (*domain.Order, error)
 
 // Implement remaining methods from OrderService interface
 func (s *orderService) AddItemToCustomerOrder(orderID string, itemID string, quantity int) (*domain.Order, error) {
+	if orderID == "" {
+		return nil, errors.New("orderID can not be empty")
+	}
+	if itemID == "" {
+		return nil, errors.New("itemID can not be empty")
+	}
+	switch {
+	case quantity <= 0:
+		return nil, errors.New("quantity must be greater than 0")
+	case quantity > 10:
+		return nil, errors.New("cannot add more than 10 items at once")
+	}
 	order, orderErr := s.orderRepo.FindByID(orderID)
 	if orderErr != nil {
 		return nil, orderErr
@@ -89,7 +102,7 @@ func (s *orderService) AddItemToCustomerOrder(orderID string, itemID string, qua
 		return nil, err
 	}
 
-	return nil, nil
+	return order, nil
 }
 
 func (s *orderService) RemoveItemFromOrder(orderID string, itemID string) (*domain.Order, error) {
@@ -109,7 +122,7 @@ func (s *orderService) RemoveItemFromOrder(orderID string, itemID string) (*doma
 	if itemIndex == -1 {
 		return nil, errors.New("item not found in customer order")
 	}
-	order.OrderItems = append(order.OrderItems, order.OrderItems[:itemIndex+1]...)
+	order.OrderItems = append(order.OrderItems[:itemIndex], order.OrderItems[itemIndex+1:]...)
 	order.OrderTotal = order.CalculateSubtotal()
 
 	updateError := s.orderRepo.Update(order)
@@ -122,6 +135,16 @@ func (s *orderService) RemoveItemFromOrder(orderID string, itemID string) (*doma
 
 func (s *orderService) UpdateOrderStatus(orderID string, status domain.OrderStatus) (*domain.Order, error) {
 	order, orderErr := s.orderRepo.FindByID(orderID)
+
+	switch order.OrderStatus {
+	case domain.Delivered:
+		if status == domain.Preparing || status == domain.Ordered {
+			return nil, errors.New("cannot change status from delivered")
+		}
+	case domain.Cancelled:
+		return nil, errors.New("cannot modify cancelled order")
+	}
+
 	if orderErr != nil {
 		return nil, orderErr
 	}
