@@ -3,16 +3,16 @@ package handlers
 import (
 	"net/http"
 	"restaurant-go-api/internal/adapters/primary/dto"
-	"restaurant-go-api/internal/core"
+	"restaurant-go-api/internal/core/services"
 
 	"github.com/labstack/echo/v4"
 )
 
 type OrderHandler struct {
-	orderService core.OrderService
+	orderService services.OrderService
 }
 
-func NewOrderHandler(orderService core.OrderService) *OrderHandler {
+func NewOrderHandler(orderService services.OrderService) *OrderHandler {
 	return &OrderHandler{orderService: orderService}
 }
 

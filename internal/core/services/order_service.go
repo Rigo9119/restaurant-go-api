@@ -1,7 +1,8 @@
-package core
+package services
 
 import (
 	"errors"
+	"restaurant-go-api/internal/core"
 	"restaurant-go-api/internal/core/domain"
 	"restaurant-go-api/internal/shared/utils"
 )
@@ -21,16 +22,16 @@ type OrderService interface {
 }
 
 type orderService struct {
-	orderRepo OrderRepository
-	userRepo  UserRepository
-	menuRepo  MenuRepository
+	orderRepo core.OrderRepository
+	userRepo  core.UserRepository
+	menuRepo  core.MenuRepository
 }
 
 // Constructor para una nueva orden
 func NewOrderService(
-	orderRepo OrderRepository,
-	userRepo UserRepository,
-	menuRepo MenuRepository,
+	orderRepo core.OrderRepository,
+	userRepo core.UserRepository,
+	menuRepo core.MenuRepository,
 ) OrderService {
 	return &orderService{
 		orderRepo: orderRepo,
@@ -97,5 +98,3 @@ func (s *orderService) ProcessPayment(orderID string, paymentMethod string) erro
 	// TODO: Implement later
 	return errors.New("not implemented yet")
 }
-
-// ID generation is now handled by utils.GenerateRandomID()

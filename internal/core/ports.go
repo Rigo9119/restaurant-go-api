@@ -1,9 +1,10 @@
+// Package core
+// secondary port / repo -> acces data and controls data persistency
+// access data and controls data persistency
+// (interfaces y contratos)
 package core
 
 import "restaurant-go-api/internal/core/domain"
-
-// interfaces y contratos
-// Secondary port - repository -> Accede a los datos y manipula la persistencia de estos
 
 // Repository generico - T puede ser any
 type Repository[T any] interface {

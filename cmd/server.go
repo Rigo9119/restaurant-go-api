@@ -5,8 +5,8 @@ import (
 	"net/http"
 	"restaurant-go-api/internal/adapters/primary/handlers"
 	"restaurant-go-api/internal/adapters/secondary/memory"
-	"restaurant-go-api/internal/core"
 	"restaurant-go-api/internal/core/domain"
+	"restaurant-go-api/internal/core/services"
 
 	"github.com/labstack/echo/v4"
 	"github.com/labstack/echo/v4/middleware"
@@ -32,7 +32,7 @@ func StartServer() error {
 	}
 
 	// servicios
-	orderService := core.NewOrderService(orderRepo, userRepo, menuRepo)
+	orderService := services.NewOrderService(orderRepo, userRepo, menuRepo)
 
 	// handlers
 	orderHandler := handlers.NewOrderHandler(orderService)
