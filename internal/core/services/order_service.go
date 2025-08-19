@@ -12,10 +12,10 @@ import (
 type OrderService interface {
 	CreateCustomerOrder(customerID string) (*domain.Order, error)
 
-	AddItemToCustomerOrder(orderID string, itemID string, quantity int) error
-	RemoveItemFromOrder(orderID string, itemID string) error
+	AddItemToCustomerOrder(orderID string, itemID string, quantity int) (*domain.Order, error)
+	RemoveItemFromOrder(orderID string, itemID string) (*domain.Order, error)
 
-	UpdateOrderStatus(orderID string, status domain.OrderStatus) error
+	UpdateOrderStatus(orderID string, status domain.OrderStatus) (*domain.Order, error)
 	CalculateOrderTotal(orderID string) (int, error)
 	GetOrderDetails(orderID string) (*domain.Order, error)
 	ProcessPayment(orderID string, paymentMethod string) error
@@ -69,29 +69,97 @@ func (s *orderService) CreateCustomerOrder(userID string) (*domain.Order, error)
 }
 
 // Implement remaining methods from OrderService interface
-func (s *orderService) AddItemToCustomerOrder(orderID string, itemID string, quantity int) error {
-	// TODO: Implement later
-	return errors.New("not implemented yet")
+func (s *orderService) AddItemToCustomerOrder(orderID string, itemID string, quantity int) (*domain.Order, error) {
+	order, orderErr := s.orderRepo.FindByID(orderID)
+	if orderErr != nil {
+		return nil, orderErr
+	}
+	menuItem, menuItemErr := s.menuRepo.FindByID(itemID)
+	if menuItemErr != nil {
+		return nil, menuItemErr
+	}
+
+	for range quantity {
+		order.OrderItems = append(order.OrderItems, *menuItem)
+	}
+
+	order.OrderTotal = order.CalculateSubtotal()
+	err := s.orderRepo.Update(order)
+	if err != nil {
+		return nil, err
+	}
+
+	return nil, nil
 }
 
-func (s *orderService) RemoveItemFromOrder(orderID string, itemID string) error {
-	// TODO: Implement later
-	return errors.New("not implemented yet")
+func (s *orderService) RemoveItemFromOrder(orderID string, itemID string) (*domain.Order, error) {
+	order, orderErr := s.orderRepo.FindByID(orderID)
+	if orderErr != nil {
+		return nil, orderErr
+	}
+
+	itemIndex := -1
+	for i, orderItem := range order.OrderItems {
+		if orderItem.ID == itemID {
+			itemIndex = i
+			break
+		}
+	}
+
+	if itemIndex == -1 {
+		return nil, errors.New("item not found in customer order")
+	}
+	order.OrderItems = append(order.OrderItems, order.OrderItems[:itemIndex+1]...)
+	order.OrderTotal = order.CalculateSubtotal()
+
+	updateError := s.orderRepo.Update(order)
+	if updateError != nil {
+		return nil, updateError
+	}
+
+	return order, nil
 }
 
-func (s *orderService) UpdateOrderStatus(orderID string, status domain.OrderStatus) error {
-	// TODO: Implement later
-	return errors.New("not implemented yet")
+func (s *orderService) UpdateOrderStatus(orderID string, status domain.OrderStatus) (*domain.Order, error) {
+	order, orderErr := s.orderRepo.FindByID(orderID)
+	if orderErr != nil {
+		return nil, orderErr
+	}
+
+	order.OrderStatus = status
+
+	updateOrderErr := s.orderRepo.Update(order)
+	if updateOrderErr != nil {
+		return nil, updateOrderErr
+	}
+	return order, nil
 }
 
 func (s *orderService) CalculateOrderTotal(orderID string) (int, error) {
-	// TODO: Implement later
-	return 0, errors.New("not implemented yet")
+	// encuentra la oden
+	order, err := s.orderRepo.FindByID(orderID)
+	if err != nil {
+		return 0, err
+	}
+	// utiliza el metodo creado en el "domain"
+	subTotal := order.CalculateSubtotal()
+	order.OrderTotal = subTotal
+
+	// Guarda los datos en el repositorio
+	err = s.orderRepo.Update(order)
+	if err != nil {
+		return 0, err
+	}
+
+	return subTotal, nil
 }
 
 func (s *orderService) GetOrderDetails(orderID string) (*domain.Order, error) {
-	// TODO: Implement later
-	return nil, errors.New("not implemented yet")
+	order, orderErr := s.orderRepo.FindByID(orderID)
+	if orderErr != nil {
+		return nil, orderErr
+	}
+	return order, nil
 }
 
 func (s *orderService) ProcessPayment(orderID string, paymentMethod string) error {

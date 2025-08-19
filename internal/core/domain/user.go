@@ -1,8 +1,9 @@
+// Package domain
+// contiene las entidades y reglas del negocio
 package domain
 
 import "restaurant-go-api/internal/shared/utils"
 
-// Core -> contiene todas las entidades y reglas del negocio / proyecto
 type User struct {
 	ID   string
 	Name string

@@ -67,11 +67,11 @@ func (b *Burguer) CalculateBurguerPrice() int {
 	for _, sauce := range b.Sauces {
 		switch sauce {
 		case Ketchup, Mustard:
-			totalPrice += 0 // Free basic sauces
+			totalPrice += 0
 		case Mayonnaise, BBQ:
-			totalPrice += 1 // Premium sauces
+			totalPrice += 1
 		case Especial:
-			totalPrice += 2 // Specialty sauce
+			totalPrice += 2
 		default:
 			totalPrice += 1
 		}
@@ -80,13 +80,13 @@ func (b *Burguer) CalculateBurguerPrice() int {
 	for _, addon := range b.AddOns {
 		switch addon {
 		case Lettuce, Tomato, Pickles, Onion:
-			totalPrice += 0 // Free vegetables
+			totalPrice += 0
 		case Cheese:
 			totalPrice += 2
 		case Bacon:
 			totalPrice += 3
 		case Peppers, Jalapenos:
-			totalPrice += 1 // Spicy extras
+			totalPrice += 1
 		default:
 			totalPrice += 1
 		}
