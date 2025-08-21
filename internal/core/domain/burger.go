@@ -16,6 +16,12 @@ type Burger struct {
 // muchos argumentos es recomendable user el "Builder pattern", en este caso es
 // una struct BurgerBuilder que tiene los argumentos que van usar los metodos de
 // la hamburguesa
+//
+//	Think of it like ordering at a restaurant:
+//
+// - Factory = "I'll have a drink" (defaults)
+// - Setters = "Make it large, hot, no ice" (customizations)
+// - Build = "Here's your customized drink"
 type BurgerBuilder struct {
 	name      string
 	price     Price

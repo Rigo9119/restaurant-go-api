@@ -5,12 +5,45 @@ type Side struct {
 	Size Size
 }
 
-func NewSide(name, category string, price Price, available bool, size Size) *Side {
-	menuItem := NewMenuItem(name, category, "side", price, available)
+type SideBuilder struct {
+	name      string
+	category  Category
+	price     Price
+	available bool
+	size      Size
+}
 
+func NewSideBuilder(name string, price Price) *SideBuilder {
+	return &SideBuilder{
+		name:      name,
+		category:  Sides,
+		price:     price,
+		available: true,
+		size:      SizeSmall,
+	}
+}
+
+func (b *SideBuilder) SetSize(size Size) *SideBuilder {
+	b.size = size
+	return b
+}
+
+func (b *SideBuilder) SetAvailable(available bool) *SideBuilder {
+	b.available = available
+	return b
+}
+
+func (b *SideBuilder) Build() *Side {
+	menuItem := NewMenuItem(
+		b.name,
+		"side",
+		Sides,
+		b.price,
+		b.available,
+	)
 	return &Side{
 		MenuItem: *menuItem,
-		Size:     size,
+		Size:     b.size,
 	}
 }
 

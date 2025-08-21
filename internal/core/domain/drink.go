@@ -30,12 +30,12 @@ func NewDrinkBuilder(name string, price Price) *DrinkBuilder {
 	}
 }
 
-func (b *DrinkBuilder) WithSize(size Size) *DrinkBuilder {
+func (b *DrinkBuilder) SetSize(size Size) *DrinkBuilder {
 	b.size = size
 	return b
 }
 
-func (b *DrinkBuilder) WithTemperature(temp DrinkTemperature) *DrinkBuilder {
+func (b *DrinkBuilder) SetTemperature(temp DrinkTemperature) *DrinkBuilder {
 	b.temp = temp
 	return b
 }
