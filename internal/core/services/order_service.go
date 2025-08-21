@@ -1,4 +1,3 @@
-// Package services -> connectan la app con los adapters
 package services
 
 import (
@@ -28,7 +27,7 @@ type orderService struct {
 	menuRepo  core.MenuRepository
 }
 
-// NewOrderService -> Constructor para una nueva orden
+// Constructor para una nueva orden
 func NewOrderService(
 	orderRepo core.OrderRepository,
 	userRepo core.UserRepository,
@@ -72,32 +71,37 @@ func (s *orderService) CreateCustomerOrder(userID string) (*domain.Order, error)
 // Implement remaining methods from OrderService interface
 func (s *orderService) AddItemToCustomerOrder(orderID string, itemID string, quantity int) (*domain.Order, error) {
 	if orderID == "" {
-		return nil, errors.New("orderID can not be empty")
+		return nil, errors.New("orderID cannot be empty")
 	}
 	if itemID == "" {
-		return nil, errors.New("itemID can not be empty")
+		return nil, errors.New("itemID cannot be empty")
 	}
-	switch {
-	case quantity <= 0:
+	if quantity <= 0 {
 		return nil, errors.New("quantity must be greater than 0")
-	case quantity > 10:
+	}
+	if quantity > 10 {
 		return nil, errors.New("cannot add more than 10 items at once")
 	}
-	order, orderErr := s.orderRepo.FindByID(orderID)
-	if orderErr != nil {
-		return nil, orderErr
+
+	order, err := s.orderRepo.FindByID(orderID)
+	if err != nil {
+		return nil, err
 	}
-	menuItem, menuItemErr := s.menuRepo.FindByID(itemID)
-	if menuItemErr != nil {
-		return nil, menuItemErr
+	menuItem, err := s.menuRepo.FindByID(itemID)
+	if err != nil {
+		return nil, err
 	}
 
-	for range quantity {
+	// Add the specified quantity of items
+	for i := 0; i < quantity; i++ {
 		order.OrderItems = append(order.OrderItems, *menuItem)
 	}
 
+	// Recalculate total
 	order.OrderTotal = order.CalculateSubtotal()
-	err := s.orderRepo.Update(order)
+
+	// Save updated order
+	err = s.orderRepo.Update(order)
 	if err != nil {
 		return nil, err
 	}
@@ -135,7 +139,11 @@ func (s *orderService) RemoveItemFromOrder(orderID string, itemID string) (*doma
 
 func (s *orderService) UpdateOrderStatus(orderID string, status domain.OrderStatus) (*domain.Order, error) {
 	order, orderErr := s.orderRepo.FindByID(orderID)
+	if orderErr != nil {
+		return nil, orderErr
+	}
 
+	// Validate status transitions
 	switch order.OrderStatus {
 	case domain.Delivered:
 		if status == domain.Preparing || status == domain.Ordered {
@@ -143,10 +151,6 @@ func (s *orderService) UpdateOrderStatus(orderID string, status domain.OrderStat
 		}
 	case domain.Cancelled:
 		return nil, errors.New("cannot modify cancelled order")
-	}
-
-	if orderErr != nil {
-		return nil, orderErr
 	}
 
 	order.OrderStatus = status
@@ -178,14 +182,50 @@ func (s *orderService) CalculateOrderTotal(orderID string) (int, error) {
 }
 
 func (s *orderService) GetOrderDetails(orderID string) (*domain.Order, error) {
-	order, orderErr := s.orderRepo.FindByID(orderID)
-	if orderErr != nil {
-		return nil, orderErr
+	order, err := s.orderRepo.FindByID(orderID)
+	if err != nil {
+		return nil, err
 	}
 	return order, nil
 }
 
 func (s *orderService) ProcessPayment(orderID string, paymentMethod string) error {
-	// TODO: Implement later
-	return errors.New("not implemented yet")
+	// Validate order exists
+	order, err := s.orderRepo.FindByID(orderID)
+	if err != nil {
+		return err
+	}
+
+	// Validate order is ready for payment
+	if order.OrderStatus != domain.Ordered {
+		return errors.New("order is not ready for payment")
+	}
+
+	// Mock payment processing - validate payment method
+	validMethods := []string{"credit_card", "debit_card", "cash", "paypal"}
+	validMethod := false
+	for _, method := range validMethods {
+		if paymentMethod == method {
+			validMethod = true
+			break
+		}
+	}
+
+	if !validMethod {
+		return errors.New("invalid payment method")
+	}
+
+	// Mock payment failure for testing
+	if paymentMethod == "invalid" {
+		return errors.New("payment processing failed")
+	}
+
+	// Simulate successful payment
+	order.OrderStatus = domain.Preparing
+	err = s.orderRepo.Update(order)
+	if err != nil {
+		return err
+	}
+
+	return nil
 }
