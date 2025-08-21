@@ -27,7 +27,7 @@ type BurgerBuilder struct {
 }
 
 // Factory -> est funcion acepta parte de los argumentos que se necesitan para
-// construir una hamburguesa
+// construir una hamburguesa, setea los etados default del builder.
 func NewBurgerBuilder(name string, price Price) *BurgerBuilder {
 	return &BurgerBuilder{
 		name:      name,
@@ -38,6 +38,9 @@ func NewBurgerBuilder(name string, price Price) *BurgerBuilder {
 	}
 }
 
+// Setter methods -> estos nos ayudan a controlar y modificar el estado interno
+// del builder, retornan el mismo builder y nos permiten encadenar "chain"
+// methods entre si para un mejor manejo de la API
 func (b *BurgerBuilder) WithPatty(pattyType PattyType) *BurgerBuilder {
 	b.pattyType = pattyType
 	return b
