@@ -1,3 +1,5 @@
+// Package memory ayuda a guardar los datos en memoria, de momento es una
+// solucion inicial porque luego se conectara todo a una base de datos
 package memory
 
 import (

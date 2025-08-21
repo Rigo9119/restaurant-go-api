@@ -43,7 +43,7 @@ func (r *InMemoryUserRepository) Update(user *domain.User) error {
 	if _, exists := r.user[user.ID]; !exists {
 		return errors.New("user not found")
 	}
-	r.user[user.ID] = r.user[user.ID]
+	r.user[user.ID] = user
 	return nil
 }
 

@@ -17,7 +17,7 @@ type Repository[T any] interface {
 
 // MenuRepository accede al repo generico y añade otros metodos
 type MenuRepository interface {
-	Repository[domain.MenuItem]                                // Operaciones CRUD genericas
+	Repository[domain.MenuItem]                                         // Operaciones CRUD genericas
 	FindByCategory(category domain.Category) ([]domain.MenuItem, error) // Metodo especifico al menu
 }
 
@@ -28,4 +28,9 @@ type UserRepository interface {
 type OrderRepository interface {
 	Repository[domain.Order]
 	FindByCustomerID(customerID string) ([]domain.Order, error)
+}
+
+type DealRepository interface {
+	Repository[domain.Deal]
+	FindActiveDeals() ([]domain.Deal, error)
 }

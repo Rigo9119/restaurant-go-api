@@ -36,3 +36,8 @@ func NewDeal(
 func (d *Deal) CalculateDealSubTotal() int {
 	return d.DealPrice.Amount
 }
+
+func (d *Deal) IsActive() bool {
+	now := time.Now()
+	return now.After(d.StartDate) && now.Before(d.EndDate)
+}
