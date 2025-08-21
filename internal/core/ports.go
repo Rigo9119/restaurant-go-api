@@ -18,7 +18,7 @@ type Repository[T any] interface {
 // MenuRepository accede al repo generico y añade otros metodos
 type MenuRepository interface {
 	Repository[domain.MenuItem]                                // Operaciones CRUD genericas
-	FindByCategory(category string) ([]domain.MenuItem, error) // Metodo especifico al menu
+	FindByCategory(category domain.Category) ([]domain.MenuItem, error) // Metodo especifico al menu
 }
 
 type UserRepository interface {

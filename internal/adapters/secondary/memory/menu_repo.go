@@ -53,7 +53,7 @@ func (r *InMemoryMenuRepository) Delete(id string) error {
 	return nil
 }
 
-func (r *InMemoryMenuRepository) FindByCategory(category string) ([]domain.MenuItem, error) {
+func (r *InMemoryMenuRepository) FindByCategory(category domain.Category) ([]domain.MenuItem, error) {
 	menuItems := make([]domain.MenuItem, 0)
 	for _, item := range r.menuItems {
 		if item.Category == category {
