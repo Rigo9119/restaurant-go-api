@@ -9,10 +9,9 @@ type UserService interface {
 	GetUserDetails(userID string) (*domain.User, error)
 	CreateUser(name string, role domain.Role) (*domain.User, error)
 	ValidateUserPermissions(userID string, action string) (bool, error)
-	UpdateUserProfile(userID string, name string) (*domain.User, error)
+	UpdateUserProfile(userID string, update UserUpdateReq) (*domain.User, error)
 }
 
-// TODO: implement later
 type userService struct {
 	userRepo core.UserRepository
 }
@@ -24,7 +23,11 @@ func NewUserService(userRepo core.UserRepository) UserService {
 }
 
 func (s *userService) GetUserDetails(userID string) (*domain.User, error) {
-	return nil, nil
+	user, userErr := s.userRepo.FindByID(userID)
+	if userErr != nil {
+		return nil, userErr
+	}
+	return user, nil
 }
 
 func (s *userService) CreateUser(name string, role domain.Role) (*domain.User, error) {
@@ -32,9 +35,41 @@ func (s *userService) CreateUser(name string, role domain.Role) (*domain.User, e
 }
 
 func (s *userService) ValidateUserPermissions(userID string, action string) (bool, error) {
+	user, userErr := s.userRepo.FindByID(userID)
+	if userErr != nil {
+		return false, userErr
+	}
+
+	permissions := user.GetPermissions()
+	for _, permission := range permissions {
+		if string(permission) == action {
+			return true, nil
+		}
+	}
 	return false, nil
 }
 
-func (s *userService) UpdateUserProfile(userID, name string) (*domain.User, error) {
-	return nil, nil
+// UserUpdateReq -> este objeto ayuda a manejar las propiedades
+// que van a ser actulizadas, tambien puede cercer a medida que la entidad
+// maneje mas propiedades
+type UserUpdateReq struct {
+	Name *string
+	Role *domain.Role
+}
+
+func (s *userService) UpdateUserProfile(userID string, updates UserUpdateReq) (*domain.User, error) {
+	user, userErr := s.userRepo.FindByID(userID)
+	if userErr != nil {
+		return nil, userErr
+	}
+
+	if updates.Name != nil {
+		user.Name = *updates.Name
+	}
+	if updates.Role != nil {
+		user.Role = *updates.Role
+	}
+
+	err := s.userRepo.Update(user)
+	return nil, err
 }

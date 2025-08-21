@@ -41,27 +41,27 @@ const (
 	Room DrinkTemperature = "room"
 )
 
-type Sauces string
+type Sauce string
 
 const (
-	Ketchup    Sauces = "ketchup"
-	Mustard    Sauces = "mustard"
-	Mayonnaise Sauces = "mayonnaise"
-	Especial   Sauces = "Especial"
-	BBQ        Sauces = "bbq"
+	Ketchup    Sauce = "ketchup"
+	Mustard    Sauce = "mustard"
+	Mayonnaise Sauce = "mayonnaise"
+	Especial   Sauce = "Especial"
+	BBQ        Sauce = "bbq"
 )
 
-type AddOns string
+type AddOn string
 
 const (
-	Bacon     AddOns = "bacon"
-	Cheese    AddOns = "cheese"
-	Onion     AddOns = "onion"
-	Tomato    AddOns = "tomato"
-	Lettuce   AddOns = "lettuce"
-	Pickles   AddOns = "pickles"
-	Peppers   AddOns = "peppers"
-	Jalapenos AddOns = "jalapenos"
+	Bacon     AddOn = "bacon"
+	Cheese    AddOn = "cheese"
+	Onion     AddOn = "onion"
+	Tomato    AddOn = "tomato"
+	Lettuce   AddOn = "lettuce"
+	Pickles   AddOn = "pickles"
+	Peppers   AddOn = "peppers"
+	Jalapenos AddOn = "jalapenos"
 )
 
 type Price struct {
@@ -76,4 +76,26 @@ const (
 	Cancelled OrderStatus = "cancelled"
 	Ordered   OrderStatus = "ordered"
 	Delivered OrderStatus = "delivered"
+)
+
+type Category string
+
+const (
+	Burguers Category = "burguers"
+	Sides    Category = "sides"
+	Drinks   Category = "drinks"
+)
+
+type Permission string
+
+const (
+	PermissionCreateOrder    Permission = "create_order"
+	PermissionViewMenu       Permission = "view_menu"
+	PermissionModifyOwnOrder Permission = "modify_own_order"
+	PermissionManageMenu     Permission = "manage_menu"
+	PermissionViewOrders     Permission = "view_orders"
+	PermissionUpdatePrices   Permission = "update_prices"
+	PermissionManageUsers    Permission = "manage_users"
+	PermissionViewAllOrders  Permission = "view_all_orders"
+	PermissionSystemAdmin    Permission = "system_admin"
 )

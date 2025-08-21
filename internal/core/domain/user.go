@@ -35,21 +35,21 @@ func NewUser(role Role, name string) *User {
 	}
 }
 
-func (u *User) GetPermissions() []string {
+func (u *User) GetPermissions() []Permission {
 	switch u.Role {
 	case UserCustomer:
-		return []string{
-			"create_order", "view_menu", "modify_own_order",
+		return []Permission{
+			PermissionCreateOrder, PermissionViewMenu, PermissionModifyOwnOrder,
 		}
 	case UserManager:
-		return []string{
-			"manage_menu", "view_orders", "update_prices",
+		return []Permission{
+			PermissionManageMenu, PermissionViewOrders, PermissionUpdatePrices,
 		}
 	case UserAdmin:
-		return []string{
-			"manage_menu", "manage_users", "view_all_orders", "system_admin",
+		return []Permission{
+			PermissionManageMenu, PermissionManageUsers, PermissionViewAllOrders, PermissionSystemAdmin,
 		}
 	default:
-		return []string{}
+		return []Permission{}
 	}
 }

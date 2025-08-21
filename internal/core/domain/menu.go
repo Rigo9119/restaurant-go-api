@@ -1,26 +1,20 @@
 package domain
 
-import "slices"
+import (
+	"restaurant-go-api/internal/shared/utils"
+)
 
 type MenuItem struct {
 	ID        string
 	Name      string
 	Price     Price
-	Category  string
+	Category  Category
 	Available bool
-}
-
-type Burguer struct {
-	MenuItem
-	PattyType PattyType
-	BunType   BunType
-	Sauces    []Sauces
-	AddOns    []AddOns
 }
 
 type Side struct {
 	MenuItem
-	Portion Size
+	Size Size
 }
 
 type Drink struct {
@@ -34,82 +28,52 @@ type Drink struct {
 type Menu struct {
 	ID        string
 	MenuItems []MenuItem
-	Sides     []Side
-	Drink     Drink
 }
 
-func (b *Burguer) CalculateBurguerPrice() int {
-	// Calcula el precio de la hamburguesa
-	totalPrice := b.MenuItem.Price.Amount
-	switch b.PattyType {
-	case PattyBeef:
-		totalPrice += 4
-	case PattyChicken:
-		totalPrice += 3
-	case PattyVeggie:
-		totalPrice += 2
-
-	default:
-		return 0
+func NewMenuItem(name, prefix string, category Category, price Price, available bool) *MenuItem {
+	return &MenuItem{
+		ID:        utils.GenerateRandomID(prefix),
+		Name:      name,
+		Price:     price,
+		Category:  category,
+		Available: available,
 	}
-
-	switch b.BunType {
-	case BunSesame, BunPotato:
-		totalPrice += 1
-	case BunBrioche:
-		totalPrice += 2
-	case BunPretzel:
-		totalPrice += 3
-	default:
-		return 0
-	}
-
-	for _, sauce := range b.Sauces {
-		switch sauce {
-		case Ketchup, Mustard:
-			totalPrice += 0
-		case Mayonnaise, BBQ:
-			totalPrice += 1
-		case Especial:
-			totalPrice += 2
-		default:
-			totalPrice += 1
-		}
-	}
-
-	for _, addon := range b.AddOns {
-		switch addon {
-		case Lettuce, Tomato, Pickles, Onion:
-			totalPrice += 0
-		case Cheese:
-			totalPrice += 2
-		case Bacon:
-			totalPrice += 3
-		case Peppers, Jalapenos:
-			totalPrice += 1
-		default:
-			totalPrice += 1
-		}
-	}
-
-	return totalPrice
 }
 
-func (b *Burguer) MakeVegetarian() bool {
-	if b.PattyType != PattyVeggie {
-		return false
+func NewBurger(name string, price Price, category Category, available bool, pattyType PattyType, bunType BunType, sauces []Sauce, addOns []AddOn) *Burger {
+	menuItem := NewMenuItem(name, "burguer", Burguers, price, available)
+	return &Burger{
+		MenuItem:  *menuItem,
+		PattyType: pattyType,
+		BunType:   bunType,
+		Sauces:    sauces,
+		AddOns:    addOns,
 	}
+}
 
-	if slices.Contains(b.AddOns, Bacon) {
-		return false
+func NewSide(name, category string, price Price, available bool, size Size) *Side {
+	menuItem := NewMenuItem(name, category, "side", price, available)
+
+	return &Side{
+		MenuItem: *menuItem,
+		Size:     size,
 	}
+}
 
-	return true
+func NewDrink(name, category string, price Price, available, isCarbonated, hasIce bool, size Size, temp DrinkTemperature) *Drink {
+	menuItem := NewMenuItem(name, category, "drink", price, available)
+	return &Drink{
+		MenuItem:     *menuItem,
+		Size:         size,
+		Temperature:  temp,
+		IsCarbonated: isCarbonated,
+		HasIce:       hasIce,
+	}
 }
 
 func (s *Side) CalculateSidePrice() int {
 	totalPrice := s.MenuItem.Price.Amount
-	switch s.Portion {
+	switch s.Size {
 	case SizeSmall:
 		totalPrice += 1
 	case SizeMedium:
