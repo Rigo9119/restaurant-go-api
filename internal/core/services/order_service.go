@@ -4,7 +4,6 @@ import (
 	"errors"
 	"restaurant-go-api/internal/core"
 	"restaurant-go-api/internal/core/domain"
-	"restaurant-go-api/internal/shared/utils"
 )
 
 // logica de negocio
@@ -50,14 +49,8 @@ func (s *orderService) CreateCustomerOrder(userID string) (*domain.Order, error)
 		return nil, errors.New("user not found")
 	}
 
-	// 2. Crea una nueva orden
-	order := &domain.Order{
-		ID:          utils.GenerateRandomID("order"),
-		UserID:      userID,
-		OrderItems:  []domain.MenuItem{},
-		OrderTotal:  0,
-		OrderStatus: domain.Ordered,
-	}
+	// 2. Crea una nueva orden usando el builder pattern
+	order := domain.NewOrder(userID)
 
 	// 3. Guarda la orden
 	err = s.orderRepo.Save(order)
