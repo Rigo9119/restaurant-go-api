@@ -2,8 +2,8 @@ package cmd
 
 import (
 	"fmt"
-	"net/http"
 	"restaurant-go-api/internal/adapters/primary/handlers"
+	"restaurant-go-api/internal/adapters/primary/routes"
 	"restaurant-go-api/internal/adapters/secondary/memory"
 	"restaurant-go-api/internal/core/domain"
 	"restaurant-go-api/internal/core/services"
@@ -48,13 +48,10 @@ func StartServer() error {
 		),
 	)
 	e.Use(middleware.Recover())
+	e.Use(middleware.CORS())
 
 	// rutas especificas
-	e.POST("/order", orderHandler.CreateOrder)
-
-	e.GET("/", func(c echo.Context) error {
-		return c.String(http.StatusOK, "Hello world")
-	})
+	routes.SetupOrderRoutes(e, orderHandler)
 
 	e.Logger.Info("Server starting on :8080")
 	return e.Start(":8080")
