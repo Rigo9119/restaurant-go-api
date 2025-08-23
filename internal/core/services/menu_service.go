@@ -149,11 +149,49 @@ func (s *menuService) GetMenuByCategory(category domain.Category) ([]domain.Menu
 }
 
 func (s *menuService) CreateDeal(deal *domain.Deal) (*domain.Deal, error) {
-	return nil, nil
+	if deal == nil {
+		return nil, errors.New("deal field should not be empty")
+	}
+
+	if deal.Name == "" {
+		return nil, errors.New("deal name field is required")
+	}
+
+	saveErr := s.dealRepo.Save(deal)
+	if saveErr != nil {
+		return nil, saveErr
+	}
+	return deal, nil
 }
 
 func (s *menuService) UpdateDeal(dealID string, updates DealUpdatesReq) (*domain.Deal, error) {
-	return nil, nil
+	if dealID == "" {
+		return nil, errors.New("dealID field should not be empty")
+	}
+
+	deal, dealErr := s.dealRepo.FindByID(dealID)
+	if dealErr != nil {
+		return nil, dealErr
+	}
+	if updates.Name != nil {
+		deal.Name = *updates.Name
+	}
+	if updates.DealPrice != nil {
+		deal.DealPrice = *updates.DealPrice
+	}
+	if updates.Description != nil {
+		deal.Description = *updates.Description
+	}
+	if updates.DiscountPercent != nil {
+		deal.DiscountPercent = *updates.DiscountPercent
+	}
+
+	saveErr := s.dealRepo.Update(deal)
+	if saveErr != nil {
+		return nil, saveErr
+	}
+
+	return deal, nil
 }
 
 func (s *menuService) RemoveDeal(dealID string) error {

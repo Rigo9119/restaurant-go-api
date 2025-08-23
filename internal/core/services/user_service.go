@@ -1,6 +1,7 @@
 package services
 
 import (
+	"errors"
 	"restaurant-go-api/internal/core"
 	"restaurant-go-api/internal/core/domain"
 )
@@ -10,10 +11,19 @@ type UserService interface {
 	CreateUser(name string, role domain.Role) (*domain.User, error)
 	ValidateUserPermissions(userID string, action string) (bool, error)
 	UpdateUserProfile(userID string, update UserUpdateReq) (*domain.User, error)
+	DeleteUser(userID string) error
 }
 
 type userService struct {
 	userRepo core.UserRepository
+}
+
+// UserUpdateReq -> este objeto ayuda a manejar las propiedades
+// que van a ser actulizadas, tambien puede cercer a medida que la entidad
+// maneje mas propiedades
+type UserUpdateReq struct {
+	Name *string
+	Role *domain.Role
 }
 
 func NewUserService(userRepo core.UserRepository) UserService {
@@ -31,7 +41,25 @@ func (s *userService) GetUserDetails(userID string) (*domain.User, error) {
 }
 
 func (s *userService) CreateUser(name string, role domain.Role) (*domain.User, error) {
-	return nil, nil
+	if name == "" {
+		return nil, errors.New("name field should not be empty")
+	}
+
+	if role == "" {
+		return nil, errors.New("role field should not be empty")
+	}
+
+	newUser := domain.NewUser(role, name)
+	if newUser == nil {
+		return nil, errors.New("invalid role provided")
+	}
+
+	saveErr := s.userRepo.Save(newUser)
+	if saveErr != nil {
+		return nil, saveErr
+	}
+
+	return newUser, nil
 }
 
 func (s *userService) ValidateUserPermissions(userID string, action string) (bool, error) {
@@ -49,14 +77,6 @@ func (s *userService) ValidateUserPermissions(userID string, action string) (boo
 	return false, nil
 }
 
-// UserUpdateReq -> este objeto ayuda a manejar las propiedades
-// que van a ser actulizadas, tambien puede cercer a medida que la entidad
-// maneje mas propiedades
-type UserUpdateReq struct {
-	Name *string
-	Role *domain.Role
-}
-
 func (s *userService) UpdateUserProfile(userID string, updates UserUpdateReq) (*domain.User, error) {
 	user, userErr := s.userRepo.FindByID(userID)
 	if userErr != nil {
@@ -71,5 +91,22 @@ func (s *userService) UpdateUserProfile(userID string, updates UserUpdateReq) (*
 	}
 
 	err := s.userRepo.Update(user)
-	return nil, err
+	if err != nil {
+		return nil, err
+	}
+	return user, nil
+}
+
+func (s *userService) DeleteUser(userID string) error {
+	if userID == "" {
+		return errors.New("userID should not be empty")
+	}
+
+	// SIEMPRE VERIFICAR SI LA ENTIDAD EXISTE
+	_, err := s.userRepo.FindByID(userID)
+	if err != nil {
+		return err
+	}
+
+	return s.userRepo.Delete(userID)
 }
