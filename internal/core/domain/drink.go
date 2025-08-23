@@ -16,6 +16,7 @@ type DrinkBuilder struct {
 	isCarbonated bool
 	hasIce       bool
 	available    bool
+	description  string
 }
 
 func NewDrinkBuilder(name string, price Price) *DrinkBuilder {
@@ -58,6 +59,7 @@ func (b *DrinkBuilder) SetAvailable(available bool) *DrinkBuilder {
 func (b *DrinkBuilder) Build() *Drink {
 	menuItem := NewMenuItem(
 		b.name,
+		b.description,
 		"drink",
 		Drinks,
 		b.price,

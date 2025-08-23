@@ -6,11 +6,12 @@ type Side struct {
 }
 
 type SideBuilder struct {
-	name      string
-	category  Category
-	price     Price
-	available bool
-	size      Size
+	name        string
+	category    Category
+	price       Price
+	available   bool
+	size        Size
+	description string
 }
 
 func NewSideBuilder(name string, price Price) *SideBuilder {
@@ -36,6 +37,7 @@ func (b *SideBuilder) SetAvailable(available bool) *SideBuilder {
 func (b *SideBuilder) Build() *Side {
 	menuItem := NewMenuItem(
 		b.name,
+		b.description,
 		"side",
 		Sides,
 		b.price,

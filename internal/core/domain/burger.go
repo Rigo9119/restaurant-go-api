@@ -23,13 +23,14 @@ type Burger struct {
 // - Setters = "Make it large, hot, no ice" (customizations)
 // - Build = "Here's your customized drink"
 type BurgerBuilder struct {
-	name      string
-	price     Price
-	available bool
-	pattyType PattyType
-	bunType   BunType
-	sauces    []Sauce
-	addOns    []AddOn
+	name        string
+	price       Price
+	available   bool
+	pattyType   PattyType
+	bunType     BunType
+	sauces      []Sauce
+	addOns      []AddOn
+	description string
 }
 
 // Factory -> est funcion acepta parte de los argumentos que se necesitan para
@@ -77,6 +78,7 @@ func (b *BurgerBuilder) SetAvailable(available bool) *BurgerBuilder {
 func (b *BurgerBuilder) Build() *Burger {
 	menuItem := NewMenuItem(
 		b.name,
+		b.description,
 		"burger",
 		Burguers,
 		b.price,

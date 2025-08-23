@@ -5,11 +5,12 @@ import (
 )
 
 type MenuItem struct {
-	ID        string
-	Name      string
-	Price     Price
-	Category  Category
-	Available bool
+	ID          string
+	Name        string
+	Price       Price
+	Category    Category
+	Description string
+	Available   bool
 }
 
 type Menu struct {
@@ -17,12 +18,13 @@ type Menu struct {
 	MenuItems []MenuItem
 }
 
-func NewMenuItem(name, prefix string, category Category, price Price, available bool) *MenuItem {
+func NewMenuItem(name, description, prefix string, category Category, price Price, available bool) *MenuItem {
 	return &MenuItem{
-		ID:        utils.GenerateRandomID(prefix),
-		Name:      name,
-		Price:     price,
-		Category:  category,
-		Available: available,
+		ID:          utils.GenerateRandomID(prefix),
+		Name:        name,
+		Price:       price,
+		Category:    category,
+		Description: description,
+		Available:   available,
 	}
 }
