@@ -25,6 +25,7 @@ func StartServer() error {
 	orderRepo := memory.NewOrderRepository()
 	userRepo := memory.NewUserRepository()
 	menuRepo := memory.NewMenuRepository()
+	dealRepo := memory.NewDealRepository()
 
 	// guarda el test user
 	if err := userRepo.Save(testUser); err != nil {
@@ -33,9 +34,13 @@ func StartServer() error {
 
 	// servicios
 	orderService := services.NewOrderService(orderRepo, userRepo, menuRepo)
+	menuService := services.NewMenuService(userRepo, menuRepo, dealRepo)
+	userService := services.NewUserService(userRepo)
 
 	// handlers
 	orderHandler := handlers.NewOrderHandler(orderService)
+	menuHandler := handlers.NewMenuHandler(menuService)
+	userHandler := handlers.NewUserHandler(userService)
 
 	e := echo.New()
 	// middleware basico de echo
@@ -52,6 +57,8 @@ func StartServer() error {
 
 	// rutas especificas
 	routes.SetupOrderRoutes(e, orderHandler)
+	routes.SetupMenuRoutes(e, menuHandler)
+	routes.SetupUserRoutes(e, userHandler)
 
 	e.Logger.Info("Server starting on :8080")
 	return e.Start(":8080")
