@@ -3,10 +3,11 @@ package dto
 // Menu Request DTOs - what clients send to the server
 
 type CreateMenuItemRequest struct {
-	Name      string `json:"name" validate:"required,min=2,max=100"`
-	Price     int    `json:"price" validate:"required,min=1"`
-	Category  string `json:"category" validate:"required"`
-	Available bool   `json:"available"`
+	Name        string `json:"name" validate:"required,min=2,max=100"`
+	Price       int    `json:"price" validate:"required,min=1"`
+	Description string `json:"description"`
+	Category    string `json:"category" validate:"required"`
+	Available   bool   `json:"available"`
 }
 
 type CreateBurgerRequest struct {
@@ -15,6 +16,14 @@ type CreateBurgerRequest struct {
 	BunType   string   `json:"bun_type" validate:"required,oneof=sesame brioche potato pretzel"`
 	Sauces    []string `json:"sauces,omitempty"`
 	AddOns    []string `json:"add_ons,omitempty"`
+}
+
+type UpdateMenuItemRequest struct {
+	Name        *string `json:"name,omitempty"`
+	Price       *int    `json:"price,omitempty"`
+	Description *string `json:"description,omitempty"`
+	Category    *string `json:"category,omitempty"`
+	Available   *bool   `json:"available,omitempty"`
 }
 
 // Menu Response DTOs - what server sends to clients

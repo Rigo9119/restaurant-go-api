@@ -25,8 +25,9 @@ func (h *OrderHandler) CreateOrder(c echo.Context) error {
 			Message: "Invalid request format",
 			Code:    http.StatusBadRequest,
 		})
-	} // esto hace el Parse JSON req
+	}
 
+	// esto hace el Parse JSON req
 	if req.UserID == "" {
 		return c.JSON(http.StatusBadRequest, dto.ErrorResponse{
 			Message: "user_id is required",
