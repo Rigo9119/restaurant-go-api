@@ -44,3 +44,4 @@ type DealsListResponse struct {
 	Deals []DealResponse `json:"deals"`
 	Total int            `json:"total"`
 }
+
